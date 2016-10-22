@@ -10,10 +10,10 @@ from vaderSentiment.vaderSentiment import sentiment as vaderSentiment
 import multiprocessing
 
 # API KEYS
-consumer_key = 'CONSUMER_KEY'
-consumer_secret = 'CONSUMER_SECRET'
-access_token = 'ACCESS_TOKEN'
-access_secret = 'ACCESS_SECRET'
+consumer_key = 'CONSUMER KEY'
+consumer_secret = 'CONSUMER SECRET'
+access_token = 'ACCESS TOKEN'
+access_secret = 'ACCESS SECRET'
 
 # API BUILDING
 auth = OAuthHandler(consumer_key, consumer_secret)
@@ -42,6 +42,7 @@ class MyListener(StreamListener):
                     data['trumpNeg'] = data['trumpNeg'] + 1
                     with open('sent.json', 'w') as out:
                         json.dump(data, out)
+            return 0
 
         # RECORDS HILLARY DATA TO JSON
         def sentReturnH(x):
@@ -57,7 +58,7 @@ class MyListener(StreamListener):
                     data['hillaryNeg'] = data['hillaryNeg'] + 1
                     with open('sent.json', 'w') as out:
                         json.dump(data, out)
-
+            return 0
         # MAIN CODE TO FETCH AND ANALYZE TWEETS
 
         dataSTR = str(data)                             # MAKES STRING OUT OF TWEET DATA
@@ -74,10 +75,13 @@ class MyListener(StreamListener):
                         sentReturnH(vs['compound'])
                     if "trump" in dataSTR:
                         sentReturnT(vs['compound'])
+        return 0
 
     def on_error(self, status):
         print(status)
         return True
+
+
 
 twitter_stream = Stream(auth, MyListener())
 twitter_stream.filter(track=["trump","hillary"])
